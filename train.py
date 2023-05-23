@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Jul 29 08:40:49 2018
-
-@author: user
-"""
-
 import numpy as np
 np.random.seed(1)
 from matplotlib import pyplot as plt
@@ -29,27 +22,30 @@ def reshape(data):
     return data
 
 def plot(data, test, predicted, figsize=(5, 6)):
-    data = [reshape(d) for d in data]
-    test = [reshape(d) for d in test]
-    predicted = [reshape(d) for d in predicted]
-
     fig, axarr = plt.subplots(len(data), 3, figsize=figsize)
     for i in range(len(data)):
-        if i==0:
+        if len(data) > 1:  # Check if there are multiple data samples
             axarr[i, 0].set_title('Train data')
             axarr[i, 1].set_title("Input data")
             axarr[i, 2].set_title('Output data')
-
-        axarr[i, 0].imshow(data[i])
-        axarr[i, 0].axis('off')
-        axarr[i, 1].imshow(test[i])
-        axarr[i, 1].axis('off')
-        axarr[i, 2].imshow(predicted[i])
-        axarr[i, 2].axis('off')
+            axarr[i, 0].imshow(data[i].reshape((128, 128)))
+            axarr[i, 1].imshow(test[i].reshape((128, 128)))
+            axarr[i, 2].imshow(predicted[i].reshape((128, 128)))
+            axarr[i, 0].axis('off')
+            axarr[i, 1].axis('off')
+            axarr[i, 2].axis('off')
+        else:  # Handle case with a single data sample
+            axarr[0].set_title("Input data")
+            axarr[1].set_title('Output data')
+            axarr[0].imshow(test[i].reshape((128, 128)))
+            axarr[1].imshow(predicted[i].reshape((128, 128)))
+            axarr[0].axis('off')
+            axarr[1].axis('off')
 
     plt.tight_layout()
     plt.savefig("result.png")
     plt.show()
+
 
 def preprocessing(img, w=128, h=128):
     # Resize image
@@ -66,13 +62,18 @@ def preprocessing(img, w=128, h=128):
 
 def main():
     # Load data
-    camera = skimage.data.camera()
-    astronaut = rgb2gray(skimage.data.astronaut())
-    horse = skimage.data.horse()
-    coffee = rgb2gray(skimage.data.coffee())
-
+    # camera = skimage.data.camera()
+    # astronaut = rgb2gray(skimage.data.astronaut())
+    # horse = skimage.data.horse()
+    # coffee = rgb2gray(skimage.data.coffee())
+    # chelsea = rgb2gray(skimage.data.chelsea())
     # Marge data
-    data = [camera, astronaut, horse, coffee]
+    image = rgb2gray(skimage.io.imread("data/img.png"))
+    seven = rgb2gray(skimage.io.imread("data/seven.png"))
+    astronaut = rgb2gray(skimage.io.imread("data/astronaut.png"))
+    astronaut1 = rgb2gray(skimage.io.imread("data/chelsea.png"))
+
+    data = [image, seven, astronaut, astronaut1]
 
     # Preprocessing
     print("Start to data preprocessing...")
